@@ -107,6 +107,7 @@ namespace ACME_INC_APP.Controllers
                         await db.SaveChangesAsync();
                         ViewBag.Success = "User Successfully added !";
                         ModelState.Clear();// This will clear whatever form items have been populated
+                        ViewData["UserRoleId"] = new SelectList(db.UserRoles, "UserRoleId", "UserRole1");
                         return View();
                     } // Here I'm returning the model as there's an error and the user needs to see what has been entered. 
 
