@@ -30,36 +30,6 @@ namespace ACME_INC_APP.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        /* public IActionResult Login(string username, string password)
-         {
-             try
-             {
-                 var getUser = (from s in db.Users where (s.Username == username) select s).FirstOrDefault();
-                 if (getUser != null)
-                 {
-                     var hashCode = getUser.Vcode;
-                     //Password Hasing Process Call from the Helper Class   
-                     var encodingPasswordString = HelperClass.EncodePassword(password, hashCode);
-                     //Check Login Detail User Name Or Password    
-                     var query = (from s in db.Users where (s.Username == username) && s.Password.Equals(encodingPasswordString) select s).FirstOrDefault();
-                     if (query != null)
-                     {
-                         return RedirectToAction("Index", "Products");// Change this
-                     }
-                     ViewBag.Error = "Invalid Credentials";
-                     return View();
-                 }
-                 ViewBag.Error = "Invalid Credentials";
-                 return View();
-             }
-             catch (Exception ex)
-             {
-                 ViewBag.Error = " Error!!! contact 18002477@vcconect.co.za" + ex;
-                 return View();
-             }
-
-         }*/
-
         public async Task<IActionResult> Login(string username, string password)
         {
             try
@@ -78,6 +48,10 @@ namespace ACME_INC_APP.Controllers
                         HttpContext.Session.SetString("LoggedInUser", userQuery.Username);
                         HttpContext.Session.SetInt32("UserRoleID", userQuery.UserRoleId);
                         TempData["UsernameAsTempData"] = userQuery.Username;
+                        if (userQuery.UserRoleId == 1)
+                        {
+                            return RedirectToAction("AdminIndex", "Products");
+                        }
                         return RedirectToAction("Index", "Products");
                     }
                     else

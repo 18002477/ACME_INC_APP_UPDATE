@@ -10,8 +10,8 @@
 </p>
 <table class="table">
     <thead>
-        <tr>
-            <th>
+        <tr class="table-primary">
+            <th scope="row">
                 @Html.DisplayNameFor(model => model.Product)
             </th>
             <th>
@@ -24,26 +24,26 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Description)
-            </td>
-            <td>
-                R @Html.DisplayFor(modelItem => item.Product.Price)
-            </td>
-            <td>
-               @* <a asp-action="Edit" asp-route-id="@item.CartId">Edit</a> |*@
-                <a asp-action="Details" asp-route-id="@item.CartId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CartId">Delete</a>
-                <form class="d-flex" asp-action="Create" asp-controller="Orders" asp-route-id="@item.ProductId" method="post">
-                    <button class="btn btn-primary" type="submit">Order Now</button>
-                </form>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Description)
+                </td>
+                <td>
+                    R @Html.DisplayFor(modelItem => item.Product.Price)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.CartId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CartId">Delete</a><br />
+                    <form class="d-flex" asp-action="Create" asp-controller="Orders" asp-route-id="@item.ProductId" method="post">
+                        <button class="btn btn-primary" type="submit">Order Now</button>
+                    </form>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

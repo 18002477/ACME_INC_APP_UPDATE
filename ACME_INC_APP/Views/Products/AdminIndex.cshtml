@@ -1,11 +1,14 @@
 ﻿@model IEnumerable<ACME_INC_APP.Models.Product>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "AdminIndex";
 }
 
-<h1>Index</h1>
+<h1>Admin Index</h1>
 
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 <br />
 <div class="">
     <form class="d-flex" asp-controller="Products" asp-action="Index" method="get">
@@ -60,9 +63,9 @@
                     @Html.DisplayFor(modelItem => item.ProdCat.ProdCatName)
                 </td>
                 <td>
-                    <form class="d-flex" asp-action="Create" asp-controller="Carts" asp-route-id="@item.ProductId" method="post">
-                        <button class="btn btn-primary" type="submit">Add to cart</button>
-                    </form>
+                    <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a> |
                 </td>
             </tr>
         }

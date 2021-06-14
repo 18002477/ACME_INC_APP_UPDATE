@@ -171,5 +171,14 @@ namespace ACME_INC_APP.Controllers
         {
             return View();
         }
+
+        public IActionResult GetData()
+        {
+            var data = _context.Orders.Include("Product").ToList();
+            var query = _context.Orders
+                .GroupBy(o => o.Product.ProdCat.ProdCatName)
+                .Select(c => new { name = c.Key, count = c.Count() });
+            return View(query);
+        }
     }
 }

@@ -21,12 +21,6 @@ namespace ACME_INC_APP.Controllers
         }
 
         // GET: Products
-        /*public async Task<IActionResult> Index()
-        {
-            var aCMEContext = _context.Products.Include(p => p.ProdCat);
-            return View(await aCMEContext.ToListAsync());
-        }*/
-
         [HttpGet]
         public async Task<IActionResult> Index(string searchString)
         {
@@ -45,28 +39,23 @@ namespace ACME_INC_APP.Controllers
             return View(await product.ToListAsync());
         }
 
-        /*public async Task<IActionResult> Index(string prodCategory, string searchString)
+        [HttpGet]
+        public async Task<IActionResult> AdminIndex(string searchString)
         {
-            var CatQuery = from p in _context.Products
-                           orderby p.ProdCat.ProdCatName
-                           select p.ProdCat.ProdCatName;
 
-            var product = from p in _context.Products
-                          select p;
+            var product = from p in _context.Products select p;
             product = product.Include(s => s.ProdCat);
-            if (!string.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(searchString))
             {
                 product = product.Include(s => s.ProdCat);
                 product = product.Where(s => s.ProductName.Contains(searchString));
             }
-            if (!string.IsNullOrEmpty(prodCategory))
+            /*else if (String.IsNullOrEmpty(searchString))
             {
-                product = product.Include(s => s.ProdCat);
-                product = product.Where(x => x.ProdCat.ProdCatName.Equals(prodCategory));
-            }
+                ViewBag.Error = "No result found !";
+            }*/
             return View(await product.ToListAsync());
-        }*/
-
+        }
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -97,20 +86,6 @@ namespace ACME_INC_APP.Controllers
         // POST: Products/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        /* [HttpPost]
-         [ValidateAntiForgeryToken]
-         public async Task<IActionResult> Create([Bind("ProductId,ProductName,Description,ProdCatId,Price,ProductImage")] Product product)
-         {
-             if (ModelState.IsValid)
-             {
-                 _context.Add(product);
-                 await _context.SaveChangesAsync();
-                 return RedirectToAction(nameof(Index));
-             }
-             ViewData["ProdCatId"] = new SelectList(_context.ProdCategories, "ProdCatId", "ProdCatName", product.ProdCatId);
-             return View(product);
-         }*/
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int ProductID, string ProductName, string Description, int ProdCatId, decimal Price, IFormFile formFile)
@@ -130,9 +105,6 @@ namespace ACME_INC_APP.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        //_context.Products.Select(x=>x.ProdCatId).OrderByDescending(y=>y).FirstOrDefaultAsync()
-
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -156,38 +128,7 @@ namespace ACME_INC_APP.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-       /* public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,Description,ProdCatId,Price,ProductImage")] Product product)
-        {
-            if (id != product.ProductId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.ProductId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProdCatId"] = new SelectList(_context.ProdCategories, "ProdCatId", "ProdCatName", product.ProdCatId);
-            return View(product);
-        }*/
-
-        public async Task<IActionResult> Edit(int id, int ProductId, string ProductName, string Description,int ProdCatId, decimal Price, IFormFile formFile)
+        public async Task<IActionResult> Edit(int id, int ProductId, string ProductName, string Description, int ProdCatId, decimal Price, IFormFile formFile)
         {
             Product product = new Product()
             {

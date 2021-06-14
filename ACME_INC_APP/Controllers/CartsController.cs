@@ -47,14 +47,6 @@ namespace ACME_INC_APP.Controllers
         }
 
         // GET: Carts/Create
-        /*        public IActionResult Create()
-                {
-                    var currentUser = HttpContext.Session.GetInt32("UserID");
-                    ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Description");
-                    ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email");
-                    return View();
-                }*/
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int? id)
@@ -80,29 +72,25 @@ namespace ACME_INC_APP.Controllers
                 TempData["LoginFirst"] = "Please login to add the product to your Cart";
                 return RedirectToAction("Login", "Login");
             }
-
-            
-/*            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Description");
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email");*/
         }
 
         // POST: Carts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
- /*       [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CartId,UserId,ProductId")] Cart cart)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(cart);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Description", cart.ProductId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", cart.UserId);
-            return View(cart);
-        }*/
+        /*       [HttpPost]
+               [ValidateAntiForgeryToken]
+               public async Task<IActionResult> Create([Bind("CartId,UserId,ProductId")] Cart cart)
+               {
+                   if (ModelState.IsValid)
+                   {
+                       _context.Add(cart);
+                       await _context.SaveChangesAsync();
+                       return RedirectToAction(nameof(Index));
+                   }
+                   ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Description", cart.ProductId);
+                   ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", cart.UserId);
+                   return View(cart);
+               }*/
 
         // GET: Carts/Edit/5
         public async Task<IActionResult> Edit(int? id)

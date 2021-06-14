@@ -6,20 +6,84 @@
 
 <h1>Index</h1>
 
-@*<p>
-    <a asp-action="Create">Create New</a>
-</p>*@
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+<figure class="highcharts-figure">
+    <div id="container"></div>
+    <p class="highcharts-description">
+        This chart shows the total amount of orders per product category
+    </p>
+</figure>
+
+<script>
+    Highcharts.chart('container', {
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Total Orders by Product Category'
+        },
+        subtitle: {
+            text: 'Source: ACME INC'
+        },
+        xAxis: {
+            categories: ['Baby Products', 'Toileteries', 'Jewelry', 'Cosmetics & Beauty', 'Toys', 'Bags',
+                'Footwear', 'Sporting', 'Clothing', 'Accessories', 'Electronics', 'Supplements']
+        },
+        yAxis: {
+            title: {
+                text: 'Amount of Placed Orders'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        series: [{
+            name: 'Product Category',
+            marker: {
+                symbol: 'square'
+            },
+            data: [7, 9, 9, 14, 12, 21, 18, {
+                y: 26.5,
+                marker: {
+                    symbol: 'url(https://www.highcharts.com/samples/graphics/sun.png)'
+                }
+            }, 23.3, 18.3, 13.9, 9.6]
+
+
+        }]
+    });
+</script>
+
 <table class="table">
     <thead>
-        <tr>
-            <th>
+        <tr class="table-primary">
+            <th scope="row">
                 @Html.DisplayName("ProductName")
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Product.Description)
             </th>
             <th>
-                 @Html.DisplayNameFor(model => model.Product.Price)
+                @Html.DisplayNameFor(model => model.Product.Price)
             </th>
             <th>
                 @Html.DisplayName("Product Category")
@@ -28,26 +92,27 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Description)
-            </td>
-            <td>
-                R @Html.DisplayFor(modelItem => item.Product.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProdCat.ProdCatName)
-            </td>
-            <td>
-                @*<a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |*@
-                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Description)
+                </td>
+                <td>
+                    R @Html.DisplayFor(modelItem => item.Product.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProdCat.ProdCatName)
+                </td>
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |*@
+                    <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
