@@ -1,0 +1,34 @@
+﻿@model ACME_INC_APP.Models.UserRole
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>UserRole</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label"> User Role </label>
+                <input asp-for="UserRole1" class="form-control" />
+                <span asp-validation-for="UserRole1" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="d-grid gap-2">
+                <input type="submit" value="Create" class="btn btn-lg btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br/>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

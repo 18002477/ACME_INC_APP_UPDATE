@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<body style="text-align:center">
+    
+    <h1>Login</h1>
+
+    <h4>Welcome - Please login</h4>
+    <h5 style="color:red;">@ViewBag.Error</h5>
+    <h5 style="color:red;">@TempData["LoginFirst"]</h5>
+    <hr />
+    <div class="row">
+        <div class="col-md-4" style="text-align:center">
+
+            <form asp-action="Login" class="center-page">
+                <div class="form-group" style="text-align:left">
+                    <label class="form-label mt-4"> Username </label>
+                    <input name="username" class="form-control" />
+                </div>
+                <div class="form-group" style="text-align:left">
+                    <label class="form-label mt-4">Password</label>
+                    <input name="password" class="form-control" type="password" />
+                </div>
+                <br />
+                <div class="d-grid gap-2">
+                    <input class="btn btn-lg btn-primary" type="submit" value="Login" />
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
