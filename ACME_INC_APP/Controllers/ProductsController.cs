@@ -21,19 +21,21 @@ namespace ACME_INC_APP.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        /*public async Task<IActionResult> Index()
         {
             var aCMEContext = _context.Products.Include(p => p.ProdCat);
             return View(await aCMEContext.ToListAsync());
-        }
+        }*/
 
         [HttpGet]
         public async Task<IActionResult> Index(string searchString)
         {
+
             var product = from p in _context.Products select p;
+            product = product.Include(s => s.ProdCat);
             if (!String.IsNullOrEmpty(searchString))
             {
-                //product = product.Include(s => s.ProdCat);
+                product = product.Include(s => s.ProdCat);
                 product = product.Where(s => s.ProductName.Contains(searchString));
             }
             /*else if (String.IsNullOrEmpty(searchString))
@@ -43,38 +45,27 @@ namespace ACME_INC_APP.Controllers
             return View(await product.ToListAsync());
         }
 
-        /*  public async Task<IActionResult> Index(string prodCategory, string searchString)
-          {
-              IQueryable<int> CatQuery = from p in _context.Products
-                                         orderby p.ProdCatId
-                                         select p.ProdCatId;
+        /*public async Task<IActionResult> Index(string prodCategory, string searchString)
+        {
+            var CatQuery = from p in _context.Products
+                           orderby p.ProdCat.ProdCatName
+                           select p.ProdCat.ProdCatName;
 
-              *//*var query = from prod in _context.Products
-                          join prodCat in _context.ProdCategories on prod equals prodCat.ProdCatId
-                          select prod.ProductName;*//*
-
-              // Joins
-
-             *//* var td =
-              from prod in _context.Products
-              join prodCat in pCat. on prod.ProdCatId equals prodCat.ProdCatId
-              where s.Entity_ID == getEntity
-              select s;*//*
-
-              var product = from p in _context.Products
-                            select p;
-
-              if (!String.IsNullOrEmpty(searchString))
-              {
-                  product = product.Where(s => s.ProductName.Contains(searchString));
-              }
-              if (!string.IsNullOrEmpty(prodCategory))
-              {
-                  product = product.Where(x => x.ProdCatId.Equals(prodCategory));
-              }
-
-              return View(await product.ToListAsync());
-          }*/
+            var product = from p in _context.Products
+                          select p;
+            product = product.Include(s => s.ProdCat);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                product = product.Include(s => s.ProdCat);
+                product = product.Where(s => s.ProductName.Contains(searchString));
+            }
+            if (!string.IsNullOrEmpty(prodCategory))
+            {
+                product = product.Include(s => s.ProdCat);
+                product = product.Where(x => x.ProdCat.ProdCatName.Equals(prodCategory));
+            }
+            return View(await product.ToListAsync());
+        }*/
 
 
         // GET: Products/Details/5
@@ -122,21 +113,6 @@ namespace ACME_INC_APP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        /* public async Task<IActionResult> Create([Bind("ProductId,ProductName,Description,ProdCatId,Price")] IFormFile formFile, Product product)
-         {
-             if (ModelState.IsValid)
-             {
-                 MemoryStream memoryStream = new MemoryStream();
-                 formFile.CopyTo(memoryStream);
-                 product.ProductImage = memoryStream.ToArray();
-                 _context.Add(product);
-                 await _context.SaveChangesAsync();
-                 return RedirectToAction(nameof(Index));
-             }
-             ViewData["ProdCatId"] = new SelectList(_context.ProdCategories, "ProdCatId", "ProdCatName", product.ProdCatId);
-             return View(product);
-         }*/
-
         public async Task<IActionResult> Create(int ProductID, string ProductName, string Description, int ProdCatId, decimal Price, IFormFile formFile)
         {
             Product product = new Product()
@@ -180,7 +156,7 @@ namespace ACME_INC_APP.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,Description,ProdCatId,Price,ProductImage")] Product product)
+       /* public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,Description,ProdCatId,Price,ProductImage")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -209,7 +185,50 @@ namespace ACME_INC_APP.Controllers
             }
             ViewData["ProdCatId"] = new SelectList(_context.ProdCategories, "ProdCatId", "ProdCatName", product.ProdCatId);
             return View(product);
+        }*/
+
+        public async Task<IActionResult> Edit(int id, int ProductId, string ProductName, string Description,int ProdCatId, decimal Price, IFormFile formFile)
+        {
+            Product product = new Product()
+            {
+                ProductId = ProductId,
+                ProductName = ProductName,
+                Description = Description,
+                ProdCatId = ProdCatId,
+                Price = Price
+            };
+            if (id != product.ProductId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    MemoryStream memoryStream = new MemoryStream();
+                    formFile.CopyTo(memoryStream);
+                    product.ProductImage = memoryStream.ToArray();
+                    _context.Update(product);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProductExists(product.ProductId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ProdCatId"] = new SelectList(_context.ProdCategories, "ProdCatId", "ProdCatName", product.ProdCatId);
+            return View(product);
         }
+
 
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)

@@ -60,8 +60,11 @@
                                     <a class="nav-link" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
                                 </li>
                                 <li class="nav-item" style="position:fixed; right:160px">
-                                    <button id="btnCart" class="btn btn-secondary my-2 my-sm-0" type="button">Cart<span class="badge" id="pCount" runat="server"></span></button>
+                                    <form class="d-flex" asp-action="Index" asp-controller="Carts" method="get">
+                                        <button id="btnCart" class="btn btn-secondary my-2 my-sm-0" type="submit">Cart<span class="badge" id="pCount" runat="server"></span></button>
+                                    </form>
                                 </li>
+
                                 <li class="nav-item" style="position:fixed; right:80px" ;>
                                     <a class="nav-link " asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
                                 </li>

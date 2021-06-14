@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ACME_INC_APP.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace ACME_INC_APP.Controllers
 {
@@ -21,7 +22,7 @@ namespace ACME_INC_APP.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var aCMEContext = _context.Orders.Include(o => o.Product);
+            var aCMEContext = _context.Orders.Include(o => o.Product.ProdCat); 
             return View(await aCMEContext.ToListAsync());
         }
 
@@ -56,20 +57,29 @@ namespace ACME_INC_APP.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,ProductId")] Order order)
+        public async Task<IActionResult> Create(int? id)
         {
-            if (ModelState.IsValid)
+            if (HttpContext.Session.GetString("LoggedInUser") != null)
             {
-                _context.Add(order);
+                ViewBag.User = HttpContext.Session.GetString("LoggedInUser");
+
+                Order order = new Order()
+                {
+                    ProductId = (int)id
+                };
+                _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Purchase));
             }
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Description", order.ProductId);
-            return View(order);
+            else
+            {
+                TempData["LoginFirst"] = "Please login to buy a Product";
+                return RedirectToAction("Login", "Login");
+            }
         }
 
-        // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+            // GET: Orders/Edit/5
+            public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -154,6 +164,12 @@ namespace ACME_INC_APP.Controllers
         private bool OrderExists(int id)
         {
             return _context.Orders.Any(e => e.OrderId == id);
+        }
+
+        [HttpGet]
+        public IActionResult Purchase()
+        {
+            return View();
         }
     }
 }

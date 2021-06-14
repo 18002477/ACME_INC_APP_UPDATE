@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ACME_INC_APP.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace ACME_INC_APP.Controllers
 {
@@ -46,17 +47,49 @@ namespace ACME_INC_APP.Controllers
         }
 
         // GET: Carts/Create
-        public IActionResult Create()
+        /*        public IActionResult Create()
+                {
+                    var currentUser = HttpContext.Session.GetInt32("UserID");
+                    ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Description");
+                    ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email");
+                    return View();
+                }*/
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(int? id)
         {
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Description");
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email");
-            return View();
+            int? currentUser = HttpContext.Session.GetInt32("UserID");
+            //var productID = HttpContext.Session.GetInt32("ProductID");
+
+            if (HttpContext.Session.GetString("LoggedInUser") != null)
+            {
+                ViewBag.User = HttpContext.Session.GetString("LoggedInUser");
+
+                Cart cart = new Cart()
+                {
+                    UserId = (int)currentUser,
+                    ProductId = (int)id
+                };
+                _context.Carts.Add(cart);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["LoginFirst"] = "Please login to add the product to your Cart";
+                return RedirectToAction("Login", "Login");
+            }
+
+            
+/*            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Description");
+            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email");*/
         }
 
         // POST: Carts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+ /*       [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CartId,UserId,ProductId")] Cart cart)
         {
@@ -69,7 +102,7 @@ namespace ACME_INC_APP.Controllers
             ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Description", cart.ProductId);
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", cart.UserId);
             return View(cart);
-        }
+        }*/
 
         // GET: Carts/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -161,5 +194,6 @@ namespace ACME_INC_APP.Controllers
         {
             return _context.Carts.Any(e => e.CartId == id);
         }
+
     }
 }

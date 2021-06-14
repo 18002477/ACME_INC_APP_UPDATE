@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,8 @@ namespace ACME_INC_APP.Models
         public int ProdCatId { get; set; }
         [Column(TypeName = "decimal(18, 0)")]
         public decimal Price { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Please select a PNG image smaller than 1MB")]
+        [DisplayName("Product Image")]
         public byte[] ProductImage { get; set; }
 
         [ForeignKey(nameof(ProdCatId))]

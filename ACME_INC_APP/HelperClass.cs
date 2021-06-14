@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -45,6 +48,5 @@ namespace ACME_INC_APP
             //Convert encoded bytes back to a 'readable' string    
             return BitConverter.ToString(encodedBytes);
         }
-       
     }
 }
