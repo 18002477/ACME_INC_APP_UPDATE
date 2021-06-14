@@ -103,7 +103,7 @@ namespace ACME_INC_APP.Controllers
             product.ProductImage = memoryStream.ToArray();
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AdminIndex));
         }
 
         // GET: Products/Edit/5
@@ -164,7 +164,7 @@ namespace ACME_INC_APP.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AdminIndex));
             }
             ViewData["ProdCatId"] = new SelectList(_context.ProdCategories, "ProdCatId", "ProdCatName", product.ProdCatId);
             return View(product);
@@ -198,7 +198,7 @@ namespace ACME_INC_APP.Controllers
             var product = await _context.Products.FindAsync(id);
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AdminIndex));
         }
 
         private bool ProductExists(int id)

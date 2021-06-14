@@ -26,6 +26,21 @@ namespace ACME_INC_APP.Controllers
             return View(await aCMEContext.ToListAsync());
         }
 
+        /* public IActionResult Index()
+         {
+             if (HttpContext.Session.GetString("LoggedInUser") != null)
+             {
+                 string username = HttpContext.Session.GetString("LoggedInUser");
+                 return View(_context.Carts.Where(b => b.User.Equals(username)).ToList());
+             }
+             else
+             {
+                 TempData["LoginFirst"] = "You need to login first";
+                 return RedirectToAction("Login", "Login");
+             }
+         }*/
+
+
         // GET: Carts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
