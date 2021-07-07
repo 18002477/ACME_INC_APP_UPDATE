@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ACME_INC_APP.Models;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Microsoft.Data.SqlClient;
+using System.Data.Entity.Core;
 
 namespace ACME_INC_APP.Controllers
 {
@@ -22,8 +25,18 @@ namespace ACME_INC_APP.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var aCMEContext = _context.Orders.Include(o => o.Product.ProdCat); 
-            return View(await aCMEContext.ToListAsync());
+
+            if (HttpContext.Session.GetString("LoggedInUser") != null)
+            {
+                var aCMEContext = _context.Orders.Include(o => o.Product.ProdCat);
+                return View(await aCMEContext.ToListAsync());
+
+            }
+            else
+            {
+                TempData["LoginFirst"] = "You need to login first";
+                return RedirectToAction("Login", "Login");
+            }
         }
 
         // GET: Orders/Details/5
@@ -67,7 +80,6 @@ namespace ACME_INC_APP.Controllers
                 {
                     ProductId = (int)id
                 };
-                _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Purchase));
             }
@@ -78,8 +90,8 @@ namespace ACME_INC_APP.Controllers
             }
         }
 
-            // GET: Orders/Edit/5
-            public async Task<IActionResult> Edit(int? id)
+        // GET: Orders/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -170,15 +182,6 @@ namespace ACME_INC_APP.Controllers
         public IActionResult Purchase()
         {
             return View();
-        }
-
-        public IActionResult GetData()
-        {
-            var data = _context.Orders.Include("Product").ToList();
-            var query = _context.Orders
-                .GroupBy(o => o.Product.ProdCat.ProdCatName)
-                .Select(c => new { name = c.Key, count = c.Count() });
-            return View(query);
         }
     }
 }

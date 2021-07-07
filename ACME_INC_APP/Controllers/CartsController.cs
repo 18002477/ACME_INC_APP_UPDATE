@@ -19,27 +19,20 @@ namespace ACME_INC_APP.Controllers
             _context = context;
         }
 
-        // GET: Carts
         public async Task<IActionResult> Index()
         {
-            var aCMEContext = _context.Carts.Include(c => c.Product).Include(c => c.User);
-            return View(await aCMEContext.ToListAsync());
+            if (HttpContext.Session.GetInt32("UserID")!= null)
+            {
+                int UserID = (int)HttpContext.Session.GetInt32("UserID");
+                var aCMEContext = _context.Carts.Where(c => c.UserId == UserID).Include(c => c.User).Include(c => c.Product);
+                return View(await aCMEContext.ToListAsync());
+            }
+            else
+            {
+                TempData["LoginFirst"] = "You need to login first";
+                return RedirectToAction("Login", "Login");
+            }
         }
-
-        /* public IActionResult Index()
-         {
-             if (HttpContext.Session.GetString("LoggedInUser") != null)
-             {
-                 string username = HttpContext.Session.GetString("LoggedInUser");
-                 return View(_context.Carts.Where(b => b.User.Equals(username)).ToList());
-             }
-             else
-             {
-                 TempData["LoginFirst"] = "You need to login first";
-                 return RedirectToAction("Login", "Login");
-             }
-         }*/
-
 
         // GET: Carts/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -61,13 +54,12 @@ namespace ACME_INC_APP.Controllers
             return View(cart);
         }
 
-        // GET: Carts/Create
+        // POST: Carts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int? id)
         {
             int? currentUser = HttpContext.Session.GetInt32("UserID");
-            //var productID = HttpContext.Session.GetInt32("ProductID");
 
             if (HttpContext.Session.GetString("LoggedInUser") != null)
             {
@@ -88,24 +80,6 @@ namespace ACME_INC_APP.Controllers
                 return RedirectToAction("Login", "Login");
             }
         }
-
-        // POST: Carts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        /*       [HttpPost]
-               [ValidateAntiForgeryToken]
-               public async Task<IActionResult> Create([Bind("CartId,UserId,ProductId")] Cart cart)
-               {
-                   if (ModelState.IsValid)
-                   {
-                       _context.Add(cart);
-                       await _context.SaveChangesAsync();
-                       return RedirectToAction(nameof(Index));
-                   }
-                   ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Description", cart.ProductId);
-                   ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", cart.UserId);
-                   return View(cart);
-               }*/
 
         // GET: Carts/Edit/5
         public async Task<IActionResult> Edit(int? id)

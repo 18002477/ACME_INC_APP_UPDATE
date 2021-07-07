@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ACME_INC_APP.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace ACME_INC_APP.Controllers
 {
@@ -21,7 +22,16 @@ namespace ACME_INC_APP.Controllers
         // GET: UserRoles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.UserRoles.ToListAsync());
+            if (HttpContext.Session.GetString("LoggedInUser") != null)
+            {
+                return View(await _context.UserRoles.ToListAsync());
+            }
+            else
+            {
+                TempData["LoginFirst"] = "You need to login first";
+                return RedirectToAction("Login", "Login");
+            }
+            
         }
 
         // GET: UserRoles/Details/5

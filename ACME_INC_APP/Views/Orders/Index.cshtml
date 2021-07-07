@@ -4,7 +4,6 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Orders</h1>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
@@ -73,6 +72,12 @@
     });
 </script>
 
+
+
+<h1>Orders</h1>
+
+
+
 <table class="table">
     <thead>
         <tr class="table-primary">
@@ -108,7 +113,6 @@
                     @Html.DisplayFor(modelItem => item.Product.ProdCat.ProdCatName)
                 </td>
                 <td>
-                    @*<a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |*@
                     <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
                 </td>
@@ -116,3 +120,6 @@
         }
     </tbody>
 </table>
+
+
+
